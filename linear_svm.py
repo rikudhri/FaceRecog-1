@@ -6,7 +6,7 @@ from sklearn.preprocessing import Normalizer
 from sklearn.svm import SVC
 
 # load dataset
-data = load('5-celebrity-faces-embeddings.npz')
+data = load('kaggle/5-celebrity-faces-embeddings.npz')
 trainX, trainy, testX, testy = data['arr_0'], data['arr_1'], data[
     'arr_2'], data['arr_3']
 print('Dataset: train=%d, test=%d' % (trainX.shape[0], testX.shape[0]))

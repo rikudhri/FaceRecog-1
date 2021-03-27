@@ -8,12 +8,11 @@ from sklearn.svm import SVC
 from matplotlib import pyplot
 
 # load faces
-data = load('5-celebrity-faces-dataset.npz')
+data = load('kaggle/5-celebrity-faces-dataset.npz')
 testX_faces = data['arr_2']
 # load face embeddings
-data = load('5-celebrity-faces-embeddings.npz')
-trainX, trainy, testX, testy = data['arr_0'], data['arr_1'], data[
-    'arr_2'], data['arr_3']
+data = load('kaggle/5-celebrity-faces-embeddings.npz')
+trainX, trainy, testX, testy = data['arr_0'], data['arr_1'], data['arr_2'], data['arr_3']
 # normalize input vectors
 in_encoder = Normalizer(norm='l2')
 trainX = in_encoder.transform(trainX)
