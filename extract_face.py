@@ -1,6 +1,7 @@
 # face detection for the 5 Celebrity Faces Dataset
 from os import listdir
 from os.path import isdir
+import glob
 from PIL import Image
 from matplotlib import pyplot
 from numpy import savez_compressed
@@ -27,7 +28,7 @@ def extract_face(detector, filename, required_size=(160, 160)):
     # resize pixels to the model size
     image = Image.fromarray(face)
     image = image.resize(required_size)
-    image.save(filename + ".thumbnail.jpg", "JPEG")
+    image.save(filename + ".tn.jpeg", "JPEG")
 
     face_array = asarray(image)
     return face_array
@@ -35,17 +36,20 @@ def extract_face(detector, filename, required_size=(160, 160)):
 
 # load images and extract faces for all images in a directory
 def load_faces(detector, directory):
-    faces = list()
+    faces = []
+    labels = []
     # enumerate files
-    for filename in listdir(directory):
+    print('looking in dir=', directory)
+    for filename in glob.glob(directory + '*.jpg'):
+        print ('found file: %s' % filename)
         # path
-        path = directory + filename
+#        path = directory + filename
         # get face
-        face = extract_face(detector, path)
+        face = extract_face(detector, filename)
         # store
         faces.append(face)
-    return faces
-
+        labels.append(filename)
+    return (faces, labels)
 
 # load a dataset that contains one subdir for each class that in turn contains images
 def load_dataset(directory):
@@ -55,15 +59,16 @@ def load_dataset(directory):
     X, y = list(), list()
     # enumerate folders, on per class
     for subdir in listdir(directory):
+        print ('found subdir: %s' % subdir )
         # path
         path = directory + subdir + '/'
         # skip any files that might be in the dir
         if not isdir(path):
             continue
         # load all faces in the subdirectory
-        faces = load_faces(detector, path)
+        (faces, labels) = load_faces(detector, path)
         # create labels
-        labels = [subdir for _ in range(len(faces))]
+        #labels = [subdir for _ in range(len(faces))]
         # summarize progress
         print('>loaded %d examples for class: %s' % (len(faces), subdir))
         # store
@@ -71,11 +76,10 @@ def load_dataset(directory):
         y.extend(labels)
     return asarray(X), asarray(y)
 
-def extract_face_runner():
-    # load train dataset
-    trainX, trainy = load_dataset('kaggle/train/')
-    print(trainX.shape, trainy.shape)
-    # load test dataset
-    testX, testy = load_dataset('kaggle/val/')
-    # save arrays to one file in compressed format
-    savez_compressed('5-celebrity-faces-dataset.npz', trainX, trainy, testX, testy)
+# load train dataset
+trainX, trainY = load_dataset('Rishi/')
+print(trainX.shape, trainY.shape)
+# load test dataset
+#    testX, testy = load_dataset('kaggle/val/')
+# save arrays to one file in compressed format
+savez_compressed('4-rishi-family-thumbnails.npz', trainX, trainY)

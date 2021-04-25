@@ -175,3 +175,4 @@ npz/4-rishi-embeddings.npz
 npz/4-rishi-family-thumbnails.npz
 npz/5-celebrity-faces-embeddings.npz
 .vscode/settings.json
+poetry.lock

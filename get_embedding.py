@@ -4,6 +4,7 @@ from numpy import expand_dims
 from numpy import asarray
 from numpy import savez_compressed
 from keras.models import load_model
+import os
 
 # get the face embedding for one face
 def get_embedding(model, face_pixels):
@@ -20,9 +21,9 @@ def get_embedding(model, face_pixels):
 
 def get_embedding_runner():
     # load the face dataset
-    data = load('kaggle/5-celebrity-faces-dataset.npz')
-    trainX, trainy, testX, testy = data['arr_0'], data['arr_1'], data['arr_2'], data['arr_3']
-    print('Loaded: ', trainX.shape, trainy.shape, testX.shape, testy.shape)
+    data = load('4-rishi-family-thumbnails.npz')
+    trainX, trainy = data['arr_0'], data['arr_1']
+    print('Loaded: ', trainX.shape, trainy.shape)
 
     # load the facenet model
     model = load_model('kaggle/facenet_keras.h5')
@@ -30,7 +31,8 @@ def get_embedding_runner():
 
     with open('names.tsv', 'w') as f1:
         for name in trainy:
-            print(name, file=f1)
+            head_tail = os.path.split(name)
+            print(head_tail[0], head_tail[1], file=f1)
 
     # convert each face in the train set to an embedding
     with open('embeddings.tsv', 'w') as f2:
@@ -42,16 +44,7 @@ def get_embedding_runner():
         newTrainX = asarray(newTrainX)
         print(newTrainX.shape)
 
-    # convert each face in the test set to an embedding
-    newTestX = list()
-    for face_pixels in testX:
-        embedding = get_embedding(model, face_pixels)
-        newTestX.append(embedding)
-    newTestX = asarray(newTestX)
-    print(newTestX.shape)
-
     # save arrays to one file in compressed format
-    savez_compressed('5-celebrity-faces-embeddings.npz', newTrainX, trainy,
-                     newTestX, testy)
+    savez_compressed('4-rishi-embeddings.npz', newTrainX, trainy)
 
 get_embedding_runner()
