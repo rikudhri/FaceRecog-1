@@ -1,5 +1,8 @@
 #Kaggle directory
 kaggle/
+-kaggle/facenet_keras.h5
+
+*.npz
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
