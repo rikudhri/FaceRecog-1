@@ -1,3 +1,5 @@
+# test change
+
 # calculate a face embedding for each face in the dataset using facenet
 from numpy import load
 from numpy import expand_dims
